@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Es tu hinchada mejor que la de Santa Fe?</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>¿De qué equipo eres?</h1>
+    <select id="team-select">
+        <option value="america">América de Cali</option>
+        <option value="millonarios">Millonarios</option>
+        <option value="junior">Atlético Junior</option>
+        <option value="cali">Deportivo Cali</option>
+        <option value="oncecaldas">Once Caldas</option>
+        <option value="pereira">Deportivo Pereira</option>
+        <option value="bucaramanga">Atlético Bucaramanga</option>
+        <option value="magdalena">Unión Magdalena</option>
+        <option value="huila">Atlético Huila</option>
+        <option value="cucuta">Cúcuta Deportivo</option>
+        <option value="santafe">Independiente Santa Fe</option>
+        <option value="nacional">Atlético Nacional</option>
+        <option value="medellin">Independiente Medellín</option>
+        <!-- Agrega otros equipos aquí -->
+    </select>
+    <button id="start-button">Comprobar</button>
+
+    <div id="question" class="hidden">
+        <h2>¿Es tu hinchada mejor que la de Santa Fe?</h2>
+        <button id="yes-button">Sí</button>
+        <button id="no-button">No</button>
+    </div>
+
+    <div id="result" class="hidden">
+        <p id="result-message"></p>
+    </div>
+
+    <footer class="hidden">
+        Pagina hecha por <a href="https://www.youtube.com/@CapitalinoRojisimo" target="_blank">Bohemio Santafereño</a>
+    </footer>
+
+    <!-- Agrega un elemento img oculto -->
+    <img id="result-image" src="estudio.jpg" alt="Estudio" style="display: none;">
+
+    <script>
+        // Obtener elementos del DOM
+        const teamSelect = document.getElementById("team-select");
+        const startButton = document.getElementById("start-button");
+        const question = document.getElementById("question");
+        const yesButton = document.getElementById("yes-button");
+        const noButton = document.getElementById("no-button");
+        const result = document.getElementById("result");
+        const resultMessage = document.getElementById("result-message");
+        const resultImage = document.getElementById("result-image");
+        const footer = document.querySelector("footer");
+        let startButtonClicked = false;
+        let yesButtonClicked = false;
+        let noButtonClicked = false;
+        
+        const audioPlayer = new Audio();
+        const altAudioPlayer = new Audio();
+        const santaFeAudioPlayer = new Audio();
+
+        // Manejar el clic en el botón "Comprobar"
+        startButton.addEventListener("click", function () {
+            question.classList.remove("hidden");
+            startButton.disabled = true;
+            startButtonClicked = true;
+            checkFooter();
+        });
+
+        // Manejar el clic en el botón "Sí"
+        yesButton.addEventListener("click", function () {
+            checkAnswer("yes");
+            yesButtonClicked = true;
+            noButtonClicked = false;
+            checkFooter();
+        });
+
+        // Manejar el clic en el botón "No"
+        noButton.addEventListener("click", function () {
+            checkAnswer("no");
+            yesButtonClicked = false;
+            noButtonClicked = true;
+            checkFooter();
+        });
+
+        // Función para comprobar la respuesta
+        function checkFooter() {
+            if (startButtonClicked && (yesButtonClicked || noButtonClicked)) {
+                footer.classList.remove("hidden");
+            }
+        }
+
+        // Función para comprobar la respuesta
+        function checkAnswer(answer) {
+            const selectedTeam = teamSelect.value.toLowerCase();
+            let responseMessage = "";
+
+            // Detener cualquier canción en reproducción
+            audioPlayer.pause();
+            altAudioPlayer.pause();
+            santaFeAudioPlayer.pause();
+
+            switch (selectedTeam) {
+                case "america":
+                case "millonarios":
+                case "junior":
+                case "cali":
+                case "oncecaldas":
+                case "pereira":
+                case "bucaramanga":
+                case "magdalena":
+                case "huila":
+                case "cucuta":
+                    if (answer === "yes") {
+                        responseMessage = "ERROR, TU EQUIPO TIENE MENOR ASISTENCIA AL ESTADIO QUE SANTA FE EN EL SIGLO 21";
+                        if (selectedTeam !== "nacional" && selectedTeam !== "medellin" && selectedTeam !== "santafe") {
+                            audioPlayer.src = "fracasado.mp3";
+                            audioPlayer.play();
+                        }
+                    } else {
+                        responseMessage = "CORRECTO, TU HINCHADA NO ES MEJOR QUE LA DE SANTA FE, PUES TIENE MENOR ASISTENCIA AL ESTADIO";
+                        if (selectedTeam !== "nacional" && selectedTeam !== "medellin" && selectedTeam !== "santafe") {
+                            altAudioPlayer.src = "hurra.mp3";
+                            altAudioPlayer.play();
+                        }
+                    }
+                    break;
+                case "nacional":
+                case "medellin":
+                    if (answer === "yes") {
+                        responseMessage = "CORRECTO, TU HINCHADA TIENE MEJOR ASISTENCIA AL ESTADIO QUE SANTA FE EN EL SIGLO 21";
+                        altAudioPlayer.src = "hurra.mp3";
+                        altAudioPlayer.play();
+                    } else {
+                        responseMessage = "NO SEAS HUMILDE, TU HINCHADA SI TIENE MEJOR ASISTENCIA AL ESTADIO QUE LA DE SANTA FE";
+                        altAudioPlayer.src = "hurra.mp3";
+                        altAudioPlayer.play();
+                    }
+                    break;
+                case "santafe":
+                    responseMessage = "SANTA FE NO PUEDE SER MEJOR QUE SANTA FE, SANTA FE YA ES PERFECTO";
+                    santaFeAudioPlayer.src = "santafe.mp3";
+                    santaFeAudioPlayer.play();
+                    break;
+                default:
+                    responseMessage = "ERROR, TU EQUIPO TIENE MENOR ASISTENCIA AL ESTADIO QUE SANTA FE EN EL SIGLO 21";
+            }
+
+            resultMessage.textContent = responseMessage;
+            result.classList.remove("hidden");
+
+            // Muestra la imagen
+            resultImage.style.display = "block";
+        }
+    </script>
+</body>
+</html>
